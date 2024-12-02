@@ -42,6 +42,9 @@ final class AbonnementController extends AbstractController
         ]);
     }
 
+
+
+
     #[Route('/{id}', name: 'app_abonnement_show', methods: ['GET'])]
     public function show(Abonnement $abonnement): Response
     {

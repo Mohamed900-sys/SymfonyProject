@@ -3,6 +3,8 @@
 namespace App\Entity;
 
 use App\Repository\SalleRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
 #[ORM\Entity(repositoryClass: SalleRepository::class)]
@@ -24,6 +26,46 @@ class Salle
 
     #[ORM\Column(length: 50)]
     private ?string $ville = null;
+
+
+    #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'gymsOwned')]
+    #[ORM\JoinColumn(nullable: false, name: 'owner_id', referencedColumnName: 'id')]
+    private ?User $owner = null;
+
+    // #[ORM\OneToMany(targetEntity: User::class, mappedBy: 'trainingArea')]
+    // private Collection $members;
+
+
+
+    // Getters and Setters
+
+    public function getOwner(): ?User
+    {
+        return $this->owner;
+    }
+
+    public function setOwner(?User $owner): self
+    {
+        $this->owner = $owner;
+        return $this;
+    }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    
 
     public function getId(): ?int
     {

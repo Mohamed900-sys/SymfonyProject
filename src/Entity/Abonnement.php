@@ -3,7 +3,10 @@
 namespace App\Entity;
 
 use App\Repository\AbonnementRepository;
+use Doctrine\Common\Collections\ArrayCollection;
+use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints\Date;
 
 #[ORM\Entity(repositoryClass: AbonnementRepository::class)]
 class Abonnement
@@ -19,8 +22,51 @@ class Abonnement
     #[ORM\Column]
     private ?float $prix = null;
 
+
     #[ORM\Column(length: 100, nullable: true)]
     private ?string $description = null;
+
+
+    #[ORM\OneToMany(targetEntity: UserAbonnement::class, mappedBy: 'abonnement', cascade: ['persist', 'remove'])]
+    private $userAbonnements;
+
+    public function __construct()
+    {
+        $this->userAbonnements = new ArrayCollection();
+    }
+
+    public function getUserAbonnements(): Collection
+    {
+        return $this->userAbonnements;
+    }
+
+    public function addUserAbonnement(UserAbonnement $userAbonnement): self
+    {
+        if (!$this->userAbonnements->contains($userAbonnement)) {
+            $this->userAbonnements[] = $userAbonnement;
+            $userAbonnement->setAbonnement($this);
+        }
+
+        return $this;
+    }
+
+    public function removeUserAbonnement(UserAbonnement $userAbonnement): self
+    {
+        if ($this->userAbonnements->removeElement($userAbonnement)) {
+            if ($userAbonnement->getAbonnement() === $this) {
+                $userAbonnement->setAbonnement(null);
+            }
+        }
+
+        return $this;
+    }
+
+
+
+
+
+
+
 
     public function getId(): ?int
     {
