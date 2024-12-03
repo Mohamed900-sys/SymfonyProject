@@ -14,7 +14,7 @@ use Symfony\Component\Form\Extension\Core\Type\SubmitType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
 use Symfony\Bridge\Doctrine\Attribute\MapEntity;
-
+use Symfony\Component\Form\Extension\Core\Type\ChoiceType;
 
 class RegisterFormType extends AbstractType
 {
@@ -26,7 +26,17 @@ class RegisterFormType extends AbstractType
             ->add('email',TextType::class, array('attr' => array('class' => 'form-control')))
             ->add('password',PasswordType::class, array('attr' => array('class' => 'form-control')))
             ->add('tel',NumberType::class, array('attr' => array('class' => 'form-control'),'html5'=> true))
-
+            ->add('role', ChoiceType::class, [
+                'choices'  => [
+                    'Normal User' => 'ROLE_USER',
+                    'Coach' => 'ROLE_COACH',
+                    'Owner' => 'ROLE_OWNER',
+                ],
+                'expanded' => false, // Use a dropdown (set to true for radio buttons)
+                'multiple' => false, // Single selection
+                'attr' => array('class' => 'form-control'), // Bootstrap styling
+                'label' => 'User Role', // Field label
+            ])
             ->add('Register',SubmitType::class, array('attr' => array('class' => 'btn btn-primary')))
 
 

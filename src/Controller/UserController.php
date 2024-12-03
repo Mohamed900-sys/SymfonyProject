@@ -16,6 +16,7 @@ use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
+use Symfony\Component\HttpFoundation\Session\SessionInterface;
 use Symfony\Component\Routing\Attribute\Route;
 
 
@@ -34,28 +35,28 @@ final class UserController extends AbstractController
         ]);
     }
 
+    // #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
+    // public function new(Request $request, EntityManagerInterface $entityManager): Response
+    // {
+    //     $user = new User();
+    //     $form = $this->createForm(UserType::class, $user);
+    //     $form->handleRequest($request);
+
+    //     if ($form->isSubmitted() && $form->isValid()) {
+    //         $entityManager->persist($user);
+    //         $entityManager->flush();
+
+    //         return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+    //     }
+
+    //     return $this->render('user/new.html.twig', [
+    //         'user' => $user,
+    //         'form' => $form,
+    //     ]);
+    // }
+
+    //#[Route('/register', name: 'app_user_register', methods: ['GET', 'POST'])]
     #[Route('/new', name: 'app_user_new', methods: ['GET', 'POST'])]
-    public function new(Request $request, EntityManagerInterface $entityManager): Response
-    {
-        $user = new User();
-        $form = $this->createForm(UserType::class, $user);
-        $form->handleRequest($request);
-
-        if ($form->isSubmitted() && $form->isValid()) {
-            $entityManager->persist($user);
-            $entityManager->flush();
-
-            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
-        }
-
-        return $this->render('user/new.html.twig', [
-            'user' => $user,
-            'form' => $form,
-        ]);
-    }
-
-    #[Route('/register', name: 'app_user_register', methods: ['GET', 'POST'])]
-
     public function register(EntityManagerInterface $manager,ManagerRegistry $entityManager, UserPasswordHasherInterface $passwordHasher,Request $request): Response
     {
         $user = new User();
@@ -80,7 +81,9 @@ final class UserController extends AbstractController
             //save
             $manager->persist($user);
             $manager->flush();
-            return $this->redirect($request->getUri());
+            // return $this->redirect($request->getUri());
+            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+
         }
 
 
@@ -91,7 +94,11 @@ final class UserController extends AbstractController
     }
 
     #[Route('/login', name: 'app_user_login')]
-    public function login(EntityManagerInterface $manager,ManagerRegistry $entityManager,UserPasswordHasherInterface $passwordHasher ,Request $request): Response
+    public function login(EntityManagerInterface $manager,
+                        ManagerRegistry $entityManager,
+                        UserPasswordHasherInterface $passwordHasher ,
+                        SessionInterface $session,
+                        Request $request): Response
     {
         $user = new User();
 
@@ -102,20 +109,48 @@ final class UserController extends AbstractController
 
 
         $repository = $entityManager->getRepository(User::class);
+        
         //dd($_POST["login_form"]);
         if(isset($_POST["login_form"])){
             //save
             $email = $_POST["login_form"]["email"];
             $password = $_POST["login_form"]["password"];
-            $user_db = $repository->findOneBy(['email' => $email]);
+            $userDb = $repository->findOneBy(['email' => $email]);
 
+            if (!$userDb) {
+                // Flash message for invalid email
+                $this->addFlash('error', 'Invalid email or password.');
+                return $this->redirectToRoute('app_user_login');
+            }
 
             // Verify password
-            if ($passwordHasher->isPasswordValid($user_db, $password)) {
-                dd($user_db);
-        }
+            if ($passwordHasher->isPasswordValid($userDb, $password)) {
+                //dd($user_db);
+                // Start a session
+                $session->set('user_id', $userDb->getId());
+                $session->set('user_type', $userDb->getRole());
 
-            return $this->redirect($request->getUri());
+                // Redirect based on user role
+                switch ($userDb->getRole()) {
+                    case 'admin':
+                        return $this->redirectToRoute('admin_dashboard');
+                    case 'coach':
+                        return $this->redirectToRoute('coach_dashboard');
+                    case 'gym_owner':
+                        return $this->redirectToRoute('gym_owner_dashboard');
+                    default:
+                        return $this->redirectToRoute('user_dashboard');
+                }
+
+            // You can start a session or redirect to a user-specific dashboard
+            return $this->redirectToRoute('user_dashboard');
+            }else {
+                // Flash message for invalid password
+                $this->addFlash('error', 'Invalid email or password.');
+            }
+        
+
+            //return $this->redirect($request->getUri());
         }
 
 
@@ -123,6 +158,12 @@ final class UserController extends AbstractController
         return $this->render('user/login.html.twig', [
             "loginForm" => $form->createView(),
         ]);
+    }
+    #[Route('/logout', name: 'app_user_logout')]
+    public function logout(SessionInterface $session): Response
+    {
+        $session->clear();
+        return $this->redirectToRoute('app_user_login');
     }
 
 
