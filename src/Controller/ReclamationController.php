@@ -19,6 +19,7 @@ final class ReclamationController extends AbstractController
     {
         return $this->render('reclamation/index.html.twig', [
             'reclamations' => $reclamationRepository->findAll(),
+            'page' => "Claim"
         ]);
     }
 
@@ -39,6 +40,7 @@ final class ReclamationController extends AbstractController
         return $this->render('reclamation/new.html.twig', [
             'reclamation' => $reclamation,
             'form' => $form,
+            'page' => "Claim"
         ]);
     }
 
@@ -47,6 +49,7 @@ final class ReclamationController extends AbstractController
     {
         return $this->render('reclamation/show.html.twig', [
             'reclamation' => $reclamation,
+            'page' => "Claim"
         ]);
     }
 
@@ -65,6 +68,7 @@ final class ReclamationController extends AbstractController
         return $this->render('reclamation/edit.html.twig', [
             'reclamation' => $reclamation,
             'form' => $form,
+            'page' => "Claim"
         ]);
     }
 

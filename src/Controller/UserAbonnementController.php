@@ -14,7 +14,7 @@ use Symfony\Component\Routing\Annotation\Route;
 
 class UserAbonnementController extends AbstractController
 {
-    #[Route('/subscribe/{userId}/{abonnementId}/{subscriptionLength}', name: 'subscribe')]
+    #[Route('/abonnement/{userId}/{abonnementId}/{subscriptionLength}', name: 'subscribe')]
     public function subscribe(int $userId,int $abonnementId, int $subscriptionLength, EntityManagerInterface $em, Request $request)
     {
         // Get the user entity (assuming the User entity exists and is valid)
@@ -46,7 +46,10 @@ class UserAbonnementController extends AbstractController
 
         // Redirect or render a response
         // return $this->redirectToRoute('subscription_success');
-        return new Response(("<h1>DONE</h1>"));
+        return $this->redirectToRoute('app_abonnement_index');
+
+        //return new Response(("<h1>DONE</h1>"));
+        
     }
 
 }

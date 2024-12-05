@@ -113,23 +113,6 @@ class User  implements PasswordAuthenticatedUserInterface
 
 
 
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
     public function getId(): ?int
     {

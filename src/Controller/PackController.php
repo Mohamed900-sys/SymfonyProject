@@ -19,6 +19,7 @@ final class PackController extends AbstractController
     {
         return $this->render('pack/index.html.twig', [
             'packs' => $packRepository->findAll(),
+            'page' => "Pack"
         ]);
     }
 
@@ -39,6 +40,7 @@ final class PackController extends AbstractController
         return $this->render('pack/new.html.twig', [
             'pack' => $pack,
             'form' => $form,
+            'page' => "Pack"
         ]);
     }
 
@@ -47,6 +49,7 @@ final class PackController extends AbstractController
     {
         return $this->render('pack/show.html.twig', [
             'pack' => $pack,
+            'page' => "Pack"
         ]);
     }
 
@@ -65,6 +68,7 @@ final class PackController extends AbstractController
         return $this->render('pack/edit.html.twig', [
             'pack' => $pack,
             'form' => $form,
+            'page' => "Pack"
         ]);
     }
 

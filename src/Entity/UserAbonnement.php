@@ -8,10 +8,13 @@ use Doctrine\ORM\Mapping as ORM;
 class UserAbonnement
 {
     #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column]
+    private ?int $id = null;
+
     #[ORM\ManyToOne(targetEntity: User::class, inversedBy: 'userAbonnements')]
     private $user;
 
-    #[ORM\Id]
     #[ORM\ManyToOne(targetEntity: Abonnement::class, inversedBy: 'userAbonnements')]
     private $abonnement;
 
@@ -20,6 +23,11 @@ class UserAbonnement
 
     #[ORM\Column(type: 'datetime')]
     private $endDate;
+
+    public function getId(): ?int
+    {
+        return $this->id;
+    }
 
     public function getUser(): ?User
     {

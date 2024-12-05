@@ -19,6 +19,7 @@ final class AbonnementController extends AbstractController
     {
         return $this->render('abonnement/index.html.twig', [
             'abonnements' => $abonnementRepository->findAll(),
+            "page" => "Subscription"
         ]);
     }
 
@@ -39,6 +40,7 @@ final class AbonnementController extends AbstractController
         return $this->render('abonnement/new.html.twig', [
             'abonnement' => $abonnement,
             'form' => $form,
+            "page" => "Subscription"
         ]);
     }
 
@@ -68,6 +70,8 @@ final class AbonnementController extends AbstractController
         return $this->render('abonnement/edit.html.twig', [
             'abonnement' => $abonnement,
             'form' => $form,
+            "page" => "Subscription"
+
         ]);
     }
 

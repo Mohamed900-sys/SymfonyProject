@@ -19,6 +19,8 @@ final class SalleController extends AbstractController
     {
         return $this->render('salle/index.html.twig', [
             'salles' => $salleRepository->findAll(),
+            'page' => "Gym"
+
         ]);
     }
 
@@ -39,6 +41,8 @@ final class SalleController extends AbstractController
         return $this->render('salle/new.html.twig', [
             'salle' => $salle,
             'form' => $form,
+            'page' => "Gym"
+
         ]);
     }
 
@@ -47,6 +51,8 @@ final class SalleController extends AbstractController
     {
         return $this->render('salle/show.html.twig', [
             'salle' => $salle,
+            'page' => "Gym"
+
         ]);
     }
 
@@ -65,6 +71,8 @@ final class SalleController extends AbstractController
         return $this->render('salle/edit.html.twig', [
             'salle' => $salle,
             'form' => $form,
+            'page' => "Gym"
+
         ]);
     }
 
