@@ -82,15 +82,19 @@ final class UserController extends AbstractController
             $manager->persist($user);
             $manager->flush();
             // return $this->redirect($request->getUri());
-            return $this->redirectToRoute('app_user_login', [], Response::HTTP_SEE_OTHER);
+
+            //$page = 'Sign Up';
+            return $this->redirectToRoute('app_user_login', [
+            ], Response::HTTP_SEE_OTHER);
 
         }
-
 
 
         //return $this->render('user/register.html.twig', [
         return $this->render('user/register.html.twig', [
             "registerForm" => $form->createView(),
+            'page' => "Sign Up"
+
         ]);
     }
 
@@ -135,15 +139,16 @@ final class UserController extends AbstractController
                 switch ($userDb->getRole()) {
                     case 'admin':
                         return $this->redirectToRoute('admin_dashboard');
-                    case 'coach':
+                    case 'ROLE_COACH':
                         return $this->redirectToRoute('coach_dashboard');
-                    case 'gym_owner':
+                    case 'ROLE_OWNER':
                         return $this->redirectToRoute('gym_owner_dashboard');
                     default:
                         return $this->redirectToRoute('user_dashboard');
                 }
 
             // You can start a session or redirect to a user-specific dashboard
+
             return $this->redirectToRoute('user_dashboard');
             }else {
                 // Flash message for invalid password
@@ -158,6 +163,8 @@ final class UserController extends AbstractController
 
         return $this->render('user/login.html.twig', [
             "loginForm" => $form->createView(),
+            "page" => "Sign In"
+            
         ]);
     }
     #[Route('/logout', name: 'app_user_logout')]
