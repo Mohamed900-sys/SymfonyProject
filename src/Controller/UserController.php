@@ -82,12 +82,13 @@ final class UserController extends AbstractController
             $manager->persist($user);
             $manager->flush();
             // return $this->redirect($request->getUri());
-            return $this->redirectToRoute('app_user_index', [], Response::HTTP_SEE_OTHER);
+            return $this->redirectToRoute('app_user_login', [], Response::HTTP_SEE_OTHER);
 
         }
 
 
 
+        //return $this->render('user/register.html.twig', [
         return $this->render('user/register.html.twig', [
             "registerForm" => $form->createView(),
         ]);

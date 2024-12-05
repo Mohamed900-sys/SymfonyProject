@@ -37,7 +37,7 @@ class RegisterFormType extends AbstractType
                 'attr' => array('class' => 'form-control'), // Bootstrap styling
                 'label' => 'User Role', // Field label
             ])
-            ->add('Register',SubmitType::class, array('attr' => array('class' => 'btn btn-primary')))
+            ->add('Register',SubmitType::class, array('attr' => array('class' => 'btn btn-primary','style' => "margin-top:15px;")))
 
 
         ;
